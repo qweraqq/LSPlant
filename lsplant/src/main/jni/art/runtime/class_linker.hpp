@@ -124,12 +124,12 @@ public:
             return false;
         }
 
-        if (!HookSyms(handler, RegisterNativeClassLinker, RegisterNative, RegisterNativeFast,
-                      RegisterNativeThread) ||
-            !HookSyms(handler, UnregisterNativeClassLinker, UnregisterNative, UnregisterNativeFast,
-                      UnregisterNativeThread)) {
-            return false;
-        }
+//         if (!HookSyms(handler, RegisterNativeClassLinker, RegisterNative, RegisterNativeFast,
+//                       RegisterNativeThread) ||
+//             !HookSyms(handler, UnregisterNativeClassLinker, UnregisterNative, UnregisterNativeFast,
+//                       UnregisterNativeThread)) {
+//             return false;
+//         }
 
         int sdk_int = GetAndroidApiLevel();
 
