@@ -119,10 +119,10 @@ private:
 
 public:
     static bool Init(const HookHandler &handler) {
-        if (!HookSyms(handler, FixupStaticTrampolinesWithThread, FixupStaticTrampolines,
-                      FixupStaticTrampolinesRaw)) {
-            return false;
-        }
+//         if (!HookSyms(handler, FixupStaticTrampolinesWithThread, FixupStaticTrampolines,
+//                       FixupStaticTrampolinesRaw)) {
+//             return false;
+//         }
 
 //         if (!HookSyms(handler, RegisterNativeClassLinker, RegisterNative, RegisterNativeFast,
 //                       RegisterNativeThread) ||
