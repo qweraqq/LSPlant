@@ -141,17 +141,17 @@ public:
             HookSyms(handler, ShouldUseInterpreterEntrypoint);
         }
 
-        if (!HookSyms(handler, FixupStaticTrampolinesWithThread, FixupStaticTrampolines,
-                      FixupStaticTrampolinesRaw)) {
-            return false;
-        }
+        // if (!HookSyms(handler, FixupStaticTrampolinesWithThread, FixupStaticTrampolines,
+        //               FixupStaticTrampolinesRaw)) {
+        //     return false;
+        // }
 
-        if (!HookSyms(handler, RegisterNativeClassLinker, RegisterNative, RegisterNativeFast,
-                      RegisterNativeThread) ||
-            !HookSyms(handler, UnregisterNativeClassLinker, UnregisterNative, UnregisterNativeFast,
-                      UnregisterNativeThread)) {
-            return false;
-        }
+        // if (!HookSyms(handler, RegisterNativeClassLinker, RegisterNative, RegisterNativeFast,
+        //               RegisterNativeThread) ||
+        //     !HookSyms(handler, UnregisterNativeClassLinker, UnregisterNative, UnregisterNativeFast,
+        //               UnregisterNativeThread)) {
+        //     return false;
+        // }
 
         if (sdk_int >= __ANDROID_API_R__) {
             if constexpr (GetArch() != Arch::kX86 && GetArch() != Arch::kX86_64) {
