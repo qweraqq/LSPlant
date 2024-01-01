@@ -181,6 +181,7 @@ inline static bool HookSymNoHandle(const HookHandler &handler, void *original, T
     } else {
         return false;
     }
+    return true;
 }
 
 template <HookerType T>

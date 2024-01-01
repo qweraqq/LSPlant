@@ -257,58 +257,84 @@ bool InitNative(JNIEnv *env, const HookHandler &handler) {
     if (!handler.inline_hooker || !handler.inline_unhooker || !handler.art_symbol_resolver) {
         return false;
     }
+
+    // 这里应该就是核心的hook
+    // 似乎原理类似https://weishu.me/2017/11/23/dexposed-on-art/
     if (!ArtMethod::Init(env, handler)) {
         LOGE("Failed to init art method");
         return false;
     }
     UpdateTrampoline(ArtMethod::GetEntryPointOffset());
+
+    // 获取CurrentFromGdb
     if (!Thread::Init(handler)) {
         LOGE("Failed to init thread");
         return false;
     }
+
+    // https://github.com/LSPosed/LSPlant/pull/9
+    // Workaround UpdateMethodsCode inlined 没理解什么作用
+    // 我理解核心在于 ShouldUseInterpreterEntrypoint 如果是quick快速模式执行，将无法执行到我们修改的函数
     if (!ClassLinker::Init(handler)) {
         LOGE("Failed to init class linker");
         return false;
     }
+
+    // https://github.com/LSPosed/LSPlant/issues/29
+    // 在修复这个issue之前只是 获取GetClassDef
     if (!Class::Init(handler)) {
         LOGE("Failed to init mirror class");
         return false;
     }
+
+    // 获取constructor、SuspendVM、destructor、ResumeVM
     if (!ScopedSuspendAll::Init(handler)) {
         LOGE("Failed to init scoped suspend all");
         return false;
     }
+
+    // 获取 constructor 和 destructor
     if (!ScopedGCCriticalSection::Init(handler)) {
         LOGE("Failed to init scoped gc critical section");
         return false;
     }
+
+    // 处理垃圾回收以后HOOK可能失效？低版本安卓？
     if (!JitCodeCache::Init(handler)) {
         LOGE("Failed to init jit code cache");
         return false;
     }
+
+    // Oreo以上直接就返回了, 主要处理老版本安卓
     if (!DexFile::Init(env, handler)) {
         LOGE("Failed to init dex file");
         return false;
     }
-    if (!Instrumentation::Init(env, handler)) {
-        LOGE("Failed to init instrumentation");
-        return false;
-    }
-    if (!JniIdManager::Init(env, handler)) {
-        LOGE("Failed to init jni id manager");
-        return false;
-    }
+
+    // https://github.com/LSPosed/LSPlant/pull/12
+    // 只是处理DEBUG的情况, 我们似乎不需要这部分逻辑
+
+    // if (!Instrumentation::Init(env, handler)) {
+    //     LOGE("Failed to init instrumentation");
+    //     return false;
+    // }
+    // if (!JniIdManager::Init(env, handler)) {
+    //     LOGE("Failed to init jni id manager");
+    //     return false;
+    // }
+
+    // 获取SetRuntimeDebugStates
     if (!Runtime::Init(handler)) {
         LOGE("Failed to init runtime");
         return false;
     }
 
-    // This should always be the last one
-    if (IsJavaDebuggable(env)) {
-        // Make the runtime non-debuggable as a workaround
-        // when ShouldUseInterpreterEntrypoint inlined
-        Runtime::Current()->SetJavaDebuggable(Runtime::RuntimeDebugState::kNonJavaDebuggable);
-    }
+    // // This should always be the last one
+    // if (IsJavaDebuggable(env)) {
+    //     // Make the runtime non-debuggable as a workaround
+    //     // when ShouldUseInterpreterEntrypoint inlined
+    //     Runtime::Current()->SetJavaDebuggable(Runtime::RuntimeDebugState::kNonJavaDebuggable);
+    // }
     return true;
 }
 

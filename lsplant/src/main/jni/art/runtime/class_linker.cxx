@@ -144,28 +144,29 @@ public:
     static bool Init(const HookHandler &handler) {
         int sdk_int = GetAndroidApiLevel();
 
-        if (sdk_int >= __ANDROID_API_N__ && sdk_int < __ANDROID_API_T__) {
-            HookSyms(handler, ShouldUseInterpreterEntrypoint);
-        }
+        
+        // if (sdk_int >= __ANDROID_API_N__ && sdk_int < __ANDROID_API_T__) {
+        //     HookSyms(handler, ShouldUseInterpreterEntrypoint);
+        // }
 
-        if (!HookSyms(handler, FixupStaticTrampolinesWithThread, FixupStaticTrampolines,
-                      FixupStaticTrampolinesRaw)) {
-            return false;
-        }
+        // if (!HookSyms(handler, FixupStaticTrampolinesWithThread, FixupStaticTrampolines,
+        //               FixupStaticTrampolinesRaw)) {
+        //     return false;
+        // }
 
-        if (!HookSyms(handler, RegisterNativeClassLinker, RegisterNative, RegisterNativeFast,
-                      RegisterNativeThread) ||
-            !HookSyms(handler, UnregisterNativeClassLinker, UnregisterNative, UnregisterNativeFast,
-                      UnregisterNativeThread)) {
-            return false;
-        }
+        // if (!HookSyms(handler, RegisterNativeClassLinker, RegisterNative, RegisterNativeFast,
+        //               RegisterNativeThread) ||
+        //     !HookSyms(handler, UnregisterNativeClassLinker, UnregisterNative, UnregisterNativeFast,
+        //               UnregisterNativeThread)) {
+        //     return false;
+        // }
 
-        if (sdk_int >= __ANDROID_API_R__) {
-            if constexpr (kArch != Arch::kX86 && kArch != Arch::kX86_64) {
-                // fixup static trampoline may have been inlined
-                HookSyms(handler, AdjustThreadVisibilityCounter, MarkVisiblyInitialized);
-            }
-        }
+        // if (sdk_int >= __ANDROID_API_R__) {
+        //     if constexpr (GetArch() != Arch::kX86 && GetArch() != Arch::kX86_64) {
+        //         // fixup static trampoline may have been inlined
+        //         HookSyms(handler, AdjustThreadVisibilityCounter, MarkVisiblyInitialized);
+        //     }
+        // }
 
         if (!RETRIEVE_MEM_FUNC_SYMBOL(
                 SetEntryPointsToInterpreter,

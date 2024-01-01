@@ -114,15 +114,16 @@ public:
 
         int sdk_int = GetAndroidApiLevel();
 
-        if (sdk_int < __ANDROID_API_O__) {
-            if (!HookSyms(handler, SetStatus, ClassSetStatus)) {
-                return false;
-            }
-        } else {
-            if (!HookSyms(handler, SetClassStatus, TrivialSetStatus)) {
-                return false;
-            }
-        }
+        // TODO: 确定啥作用
+        // if (sdk_int < __ANDROID_API_O__) {
+        //     if (!HookSyms(handler, SetStatus, ClassSetStatus)) {
+        //         return false;
+        //     }
+        // } else {
+        //     if (!HookSyms(handler, SetClassStatus, TrivialSetStatus)) {
+        //         return false;
+        //     }
+        // }
 
         if (sdk_int >= __ANDROID_API_R__) {
             initialized_status = 15;

@@ -68,28 +68,31 @@ public:
                 return false;
             }
         }
-        if (SetRuntimeDebugStateSym) {
-            static constexpr size_t kLargeEnoughSizeForRuntime = 4096;
-            std::array<uint8_t, kLargeEnoughSizeForRuntime> code;
-            static_assert(static_cast<int>(RuntimeDebugState::kJavaDebuggable) != 0);
-            static_assert(static_cast<int>(RuntimeDebugState::kJavaDebuggableAtInit) != 0);
-            code.fill(uint8_t{0});
-            auto *const fake_runtime = reinterpret_cast<Runtime *>(code.data());
-            SetRuntimeDebugState(fake_runtime, RuntimeDebugState::kJavaDebuggable);
-            for (size_t i = 0; i < kLargeEnoughSizeForRuntime; ++i) {
-                if (*reinterpret_cast<RuntimeDebugState *>(
-                        reinterpret_cast<uintptr_t>(fake_runtime) + i) ==
-                    RuntimeDebugState::kJavaDebuggable) {
-                    LOGD("found debug_state at offset %zu", i);
-                    debug_state_offset = i;
-                    break;
-                }
-            }
-            if (debug_state_offset == 0) {
-                LOGE("failed to find debug_state");
-                return false;
-            }
-        }
+
+        // 这部分只是校验逻辑, SetRuntimeDebugStates是否会被检测? 
+
+        // if (SetRuntimeDebugStateSym) {
+        //     static constexpr size_t kLargeEnoughSizeForRuntime = 4096;
+        //     std::array<uint8_t, kLargeEnoughSizeForRuntime> code;
+        //     static_assert(static_cast<int>(RuntimeDebugState::kJavaDebuggable) != 0);
+        //     static_assert(static_cast<int>(RuntimeDebugState::kJavaDebuggableAtInit) != 0);
+        //     code.fill(uint8_t{0});
+        //     auto *const fake_runtime = reinterpret_cast<Runtime *>(code.data());
+        //     SetRuntimeDebugState(fake_runtime, RuntimeDebugState::kJavaDebuggable);
+        //     for (size_t i = 0; i < kLargeEnoughSizeForRuntime; ++i) {
+        //         if (*reinterpret_cast<RuntimeDebugState *>(
+        //                 reinterpret_cast<uintptr_t>(fake_runtime) + i) ==
+        //             RuntimeDebugState::kJavaDebuggable) {
+        //             LOGD("found debug_state at offset %zu", i);
+        //             debug_state_offset = i;
+        //             break;
+        //         }
+        //     }
+        //     if (debug_state_offset == 0) {
+        //         LOGE("failed to find debug_state");
+        //         return false;
+        //     }
+        // }
         return true;
     }
 };
