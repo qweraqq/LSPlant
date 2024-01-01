@@ -37,11 +37,13 @@ public:
                 return false;
             }
         }
-        if (sdk_int >= __ANDROID_API_N__) [[likely]] {
-            if (!HookSyms(handler, GarbageCollectCache)) [[unlikely]] {
-                return false;
-            }
-        }
+
+        // TODO: 处理垃圾回收以后HOOK可能失效？低版本安卓？
+        // if (sdk_int >= __ANDROID_API_N__) [[likely]] {
+        //     if (!HookSyms(handler, GarbageCollectCache)) [[unlikely]] {
+        //         return false;
+        //     }
+        // }
         return true;
     }
 };
